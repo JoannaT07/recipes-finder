@@ -1,0 +1,17 @@
+{
+  "name": "scraper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "dev": "nodemon --watch \"src/**\" --ext \"ts,json\" --exec \"ts-node src/index.ts\""
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "axios": "^1.2.1",
+    "cheerio": "^1.0.0-rc.12",
+    "nodemon": "^2.0.20",
+    "ts-node": "^10.9.1"
+  }
+}
