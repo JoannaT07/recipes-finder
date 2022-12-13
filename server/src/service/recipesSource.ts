@@ -19,8 +19,6 @@ const loadData = () => {
         return JSON.parse(line)
     }
   });
-
-  
 }
 
 interface RawReceipe{
