@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "dev": "nodemon --watch \"src/**\" --ext \"ts,json\" --exec \"ts-node src/index.ts\""
+    "dev": "nodemon --watch \"src/**\" --ext \"ts,json\" --exec \"ts-node src/index.ts\"",
+    "dev2": "nodemon \"src/**\" --ext \"ts,json\" --exec \"ts-node src/index.ts\""
   },
   "author": "",
   "license": "ISC",
@@ -13,5 +14,9 @@
     "cheerio": "^1.0.0-rc.12",
     "nodemon": "^2.0.20",
     "ts-node": "^10.9.1"
+  },
+  "dependencies": {
+    "@types/async": "^3.2.16",
+    "async": "^3.2.4"
   }
 }

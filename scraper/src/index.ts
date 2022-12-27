@@ -1,148 +1,108 @@
 import axios from "axios";
-import cheerio, { AnyNode, CheerioAPI } from "cheerio";
-import fs from "fs";
+import fs, { appendFile } from "fs";
+import {
+  getLastPageNumber,
+  getRecipe,
+  getRecipeUrlSuffixes,
+} from "./pageService";
 
-const rootUrls = ["https://www.przepisy.pl/przepisy/na-skroty/prosty-przepis"];
-
-const scrap = () => {
-  rootUrls.forEach((mainUrl) =>
-    axios(mainUrl).then((response) => {
-      const html = response.data;
-      const mainPage = cheerio.load(html);
-      const lastPageNumber = Number(
-        mainPage(".pagination__btn--outer", html).last().text()
-      );
-      if (lastPageNumber) {
-        for (let i = 1; i <= 3; i++) {
-          let paginationUrlSuffix = "";
-          if (i > 1) {
-            paginationUrlSuffix = `?page=${i}`;
-          }
-          console.log(paginationUrlSuffix);
-          axios(`${mainUrl}${paginationUrlSuffix}`).then((response) => {
-            const html = response.data;
-            const paginationPage = cheerio.load(html);
-            paginationPage(".recipe-box", html).each(function () {
-              //   const imgUrl = paginationPage(this).find("img").last().attr('src');
-              const recipeUrlSuffix = paginationPage(this)
-                .find("a")
-                .attr("href");
-              scrapRecipe(recipeUrlSuffix);
-              });
-          });
-        }
-      }
-    })
-  );
-};
-
-const recipes: any = [];
-const images: any = [];
-const scrapRecipe = (recipeName: string | undefined) => {
-  axios(`https://www.przepisy.pl/${recipeName}`).then((reponse) => {
-    const html: AnyNode = reponse.data;
-    const recipePage = cheerio.load(html);
-    // const recipe = {} as Recipe
-    const recipe: any = {
-      name: getName(recipePage, html),
-      ingredients: getIngredients(recipePage, html),
-      instructions: getInstructions(recipePage, html),
-    };
-    const urlImg: any = {
-      title: recipeName,
-      url: getImages(recipePage, html),
-    };
-
-    if (recipe) {
-      recipes.push(recipe);
-      images.push(urlImg);
-    }
-
-    const newImgs = images.filter((image: any) => image.url !== undefined);
-    (async () => {
-      await newImgs.forEach((image: any) => {
-        downloadImages(image.url, `./output/img/${image.title}.jpg`);
-      });
-    })();
-
-    // newImgs.forEach((image: any) => {
-    //   axios({
-    //     method: "get",
-    //     url: image.url,
-    //     responseType: "stream",
-    //   }).then((response) => {
-    //     // console.log(response.data)
-    //     // fs.writeFileSync("magiczne-ciasto.jpg", response.data, "binary")
-    //     response.data.pipe(fs.createWriteStream(`./output/img/a.jpg`, "utf-8"));
-    //   });
-    // });
-
-    storeData("./output/data/recipes3.json", recipes);
-  });
-};
-
-const getName = (recipePage: any, html: AnyNode): string => {
-  return recipePage("div.recipe-desc", html).map(function (this: AnyNode) {
-    return recipePage(this).find("div > h1").text();
-  })[0];
-};
-
-const getIngredients = (recipePage: any, html: AnyNode): Ingredient[] => {
-  return recipePage(".ingredients-list-content-item", html)
-    .map(function (this: AnyNode) {
-      return {
-        name: recipePage(this).find(".ingredient-name").text(),
-        quantity: recipePage(this).find(".quantity").text(),
-      };
-    })
-    .toArray();
-};
-
-const getInstructions = (recipePage: any, html: AnyNode): string[] => {
-  return recipePage(".step-info-description", html)
-    .map(function (this: AnyNode) {
-      return recipePage(this).text().trim();
-    })
-    .toArray();
-};
-
-const getImages = (recipePage: any, html: AnyNode): string | undefined => {
-  return recipePage(".recipe-img", html).map(function (this: AnyNode) {
-    return recipePage(this).find("img.ng-star-inserted").attr("src");
-  })[0];
-};
-
-const storeData = (path: any, data: any) => {
-  try {
-    fs.writeFileSync(path, JSON.stringify(data));
-  } catch (err) {
-    console.error(err);
-  }
-};
-
-const downloadImages = async (url: any, filepath: any) => {
-  const response = await axios({
-    url,
-    method: "GET",
-    responseType: "stream",
-  });
-  return new Promise((resolve, reject) => {
-    response.data
-      .pipe(fs.createWriteStream(filepath))
-      .on("error", reject)
-      .once("close", () => resolve(filepath));
-  });
-};
-
-// scrap();
-
-interface Ingredient {
+export interface Ingredient {
   name: string;
   quantity: string;
 }
 
-interface Recipe {
+export interface Recipe {
   name: string;
   ingredients: Ingredient[];
   instructions: string[];
+  image: string | undefined;
 }
+
+const rootUrls = [
+  "https://www.przepisy.pl/przepisy/na-skroty/prosty-przepis",
+  "https://www.przepisy.pl/przepisy/na-skroty/przepisy-z-4-skladnikow",
+  "https://www.przepisy.pl/przepisy/na-skroty/przepisy-z-5-skladnikow",
+  "https://www.przepisy.pl/przepisy/na-skroty/szybkie-przepisy",
+  "https://www.przepisy.pl/przepisy/na-skroty/tanie-dania"
+];
+
+const getPaginationUrlSuffix = (pageNumber: number) => {
+  let paginationUrlSuffix = "";
+  if (pageNumber > 1) {
+    paginationUrlSuffix = `?page=${pageNumber}`;
+  }
+  return paginationUrlSuffix;
+};
+
+const getRecipeUrls = async (url: string) => {
+  const recipeUrlSuffixes: string[] = [];
+  for (let i = 1; i <= 2; i++) {
+    const paginationUrlSuffix = getPaginationUrlSuffix(i);
+    console.log(paginationUrlSuffix);
+    const recipeUrlSuffixesPortion = await getRecipeUrlSuffixes(
+      `${url}${paginationUrlSuffix}`
+    );
+    if (recipeUrlSuffixesPortion?.length) {
+      recipeUrlSuffixes.push(...recipeUrlSuffixesPortion);
+    }
+  }
+  return recipeUrlSuffixes;
+};
+
+const saveImage = async (imageUrl: string, imageName: string) => {
+  try {
+    const res = await axios({
+      method: "get",
+      url: imageUrl,
+      responseType: "stream",
+    });
+    const stream = res.data;
+    const fileStream = fs.createWriteStream(
+      `../server/output/img/${imageName}.jpg`,
+      "utf-8"
+    );
+    stream.pipe(fileStream);
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+const appendRecipes = (recipe: Recipe | undefined, i: number) => {
+  fs.appendFileSync(
+    `../server/output/data/recipes${i}.json`,
+    JSON.stringify(recipe) + "\n"
+  );
+};
+
+// const sleep = async(seconds: number) => {
+//   return new Promise((resolve) => setTimeout(resolve, seconds * 1000))
+// }
+
+const scrap = async (url: string, i: number) => {
+  const lastPageNumber = await getLastPageNumber(url);
+  if (lastPageNumber) {
+    const recipeUrlSuffixes: string[] = await getRecipeUrls(url);
+    for (const recipeUrlSuffix of recipeUrlSuffixes) {
+      const recipe = await getRecipe(recipeUrlSuffix);
+      if (recipe) {
+        let imageName: string | undefined;
+        if (recipe.image) {
+          imageName = recipeUrlSuffix.replace("przepis/", "");
+          if (!fs.existsSync(`../server/output/img/${imageName}.jpg`)) {
+            await saveImage(recipe.image, imageName);
+          }
+        }
+        appendRecipes(recipe, i)
+      }
+    }
+  }
+};
+
+const scrapeAllRecipes = async () => {
+  for (let i = 0; i <= rootUrls.length; i++) {
+    let url = rootUrls[i]
+    await scrap(url, i)
+  }
+}
+
+scrapeAllRecipes();
