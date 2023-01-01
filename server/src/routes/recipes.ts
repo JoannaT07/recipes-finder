@@ -6,8 +6,8 @@ const router = Router();
 
 router.get('/', async (req: Request, res: Response) => {
     try {
-        const recipes = await RecipesModel.find()
-        res.json(recipes)
+        // const recipes = await RecipesModel.find()
+        // res.json(recipes)
     }catch(err){
         res.json({message: err})
     }
