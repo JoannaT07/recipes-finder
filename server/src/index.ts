@@ -2,8 +2,9 @@ import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
 import { connectDB } from "./database";
-import ingredientsRouter from "./service/recipes"
-import { processRawRecipes } from "./service/recipesSource";
+import ingredientsRouter from "./routes/ingredients"
+import recipesRouter from "./routes/recipes"
+import { processRawRecipes } from "./routes/recipesService";
 dotenv.config();
 
 const port = process.env.PORT || 8080;
@@ -16,7 +17,8 @@ const main = async() => {
 
 app.use(express.json());
 app.use(cors());
-app.use("/recipes", ingredientsRouter);
+app.use("/api/ingredients", ingredientsRouter);
+app.use("/api/recipes", recipesRouter);
 // app.use(express.static('./src/static'));
 
 main();

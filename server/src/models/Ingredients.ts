@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
-
 const Schema = mongoose.Schema;
 
 const Ingredients = new Schema({
-  ingredient: {
+  name: {
     type: String,
+    required: true,
   },
 });
 

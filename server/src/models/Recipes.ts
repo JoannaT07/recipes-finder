@@ -1,7 +1,5 @@
 import mongoose from "mongoose";
-
 const Schema = mongoose.Schema;
-// const ObjectId = mongoose.Types.ObjectId;
 
 const Recipe = new Schema({
   name: {
@@ -11,15 +9,12 @@ const Recipe = new Schema({
 
   ingredients: [
     {
-      name: {
-        // type: mongoose.Schema.Types.ObjectId,
+      id: {
         type: String,
-        // ref: "Ingredients",
-        // required: true,
+        required: true,
       },
       quantity: {
         type: String,
-        // ref: "Quantity",
         // required: true,
       },
     },

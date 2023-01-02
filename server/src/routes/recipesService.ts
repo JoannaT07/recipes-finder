@@ -1,45 +1,95 @@
-import axios from "axios";
-import { RecipesModel } from "../models/recipes";
+import * as fs from "fs";
+import RecipeModel from "../models/Recipes";
+import IngredientsModel from "../models/Ingredients";
 
-export const processRecipes = async () => {
-  const rawData = await getDataFromApi();
+export const processRawRecipes = async () => {
+  await IngredientsModel.deleteMany({});
+  const rawData = loadData();
   if (rawData) {
-    const parseData = await parseRawData(rawData);
-    console.log(parseData)
-    updateDataInDb(parseData);
+    await parseIngredients(rawData);
+    const recipes = await parseRecipe(rawData);
+    await updateRecipesInDb(recipes);
   }
 };
 
-const getDataFromApi = async () => {
+const loadData = () => {
   try {
-    const options = {
-      method: "GET",
-      url: "https://tasty.p.rapidapi.com/recipes/list",
-      params: { from: "0", size: "20", tags: "under_30_minutes" },
-      headers: {
-        "X-RapidAPI-Key": "05eca59d77msh08269870e87fa7cp18d311jsn203a1d285d2b",
-        "X-RapidAPI-Host": "tasty.p.rapidapi.com",
-      },
-    };
-    const response = await axios.request(options);
-    return response.data.results;
-  } catch (e) {
-    console.error(e);
-    return undefined;
-  }
-};
-
-const parseRawData = (rawData: any) => {
-  return rawData.map((recipe: any) => ({
-    name: recipe.name,
-  }));
-};
-
-const updateDataInDb = async (parseNews:any) => {
-  try {
-    await RecipesModel.deleteMany({});
-    await RecipesModel.insertMany(parseNews);
+    const data = fs.readFileSync("output/data/recipes0.json", "utf8");
+    return data.split(/\r?\n/).map((line) => {
+      if (line) {
+        return JSON.parse(line);
+      }
+    });
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 };
+
+const distinct = (value: string, index: number, arr: string[]) =>
+  index === arr.findIndex((el: string) => el === value);
+
+const parseIngredients = async (rawData: RawReceipe[]) => {
+  console.log(rawData[0])
+  const ingredients = rawData
+    .map(({ ingredients }: RawReceipe) => ingredients.map((ingredient: RawIngredient) => ingredient.name))
+    .reduce((acc: string[], currValue: string[]) => [...acc, ...currValue])
+    .filter(distinct);
+  for (const ingredient of ingredients) {
+    const ingredientDb = await IngredientsModel.findOne({
+      name: ingredient,
+    });
+    if(!ingredientDb){
+    await IngredientsModel.create({
+      name: ingredient,
+    });
+    }
+  }
+};
+
+const getIngredientId = async (name: string) => {
+  const ingredient = await IngredientsModel.findOne({ name: name });
+  return ingredient?.id;
+};
+
+const parseRecipe = async (rawData: RawReceipe[]) => {
+  return await Promise.all(
+    rawData.map(async (recipe: RawReceipe) => ({
+      name: recipe.name,
+      ingredients: await Promise.all(
+        recipe.ingredients.map(async (rawIngredient: RawIngredient) => ({
+          quantity: rawIngredient.quantity,
+          id: await getIngredientId(rawIngredient.name),
+        }))
+      ),
+      instructions: recipe.instructions,
+    }))
+  );
+};
+
+const updateRecipesInDb = async (recipes: Recipe[]) => {
+  await RecipeModel.deleteMany({});
+  await RecipeModel.insertMany(recipes);
+};
+
+interface RawReceipe {
+  name: string | null;
+  ingredients: RawIngredient[];
+  instructions: string[] | null;
+  image: string | null;
+}
+
+type RawIngredient = {
+  name: string;
+  quantity: string;
+};
+
+type Ingredient = {
+  id: string;
+  quantity: string;
+}
+
+interface Recipe {
+  name: string | null;
+  ingredients: Ingredient[];
+  instructions: string[] | null;
+}
