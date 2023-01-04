@@ -45,7 +45,7 @@ export const getRecipe = async(recipeUrlSuffix:string) => {
 }
 
 const getName = (recipePage: CheerioAPI, html: AnyNode): string => {
-    return recipePage("div.recipe-desc h1", html).first().text()
+    return recipePage("div.recipe-desc h1", html).first().text().trim()
   };
   
   const getIngredients = (recipePage: any, html: AnyNode): Ingredient[] => {

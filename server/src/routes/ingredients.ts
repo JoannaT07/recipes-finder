@@ -1,15 +1,20 @@
 import { Request, Response, Router } from "express";
-import RecipeModel from "../models/Recipes";
+import IngredientsModel from "../models/Ingredients";
 // import {processRawRecipes} from "./recipesSource";
+
 const router = Router();
 
 router.get('/', async (req: Request, res: Response) => {
     try {
-        const recipes = await RecipeModel.find()
-        res.json(recipes)
+        const ingredients = await IngredientsModel.find()
+        res.json(ingredients)
     }catch(err){
         res.json({message: err})
     }
 })
+
+
+
+// processRawRecipes();
 
 export default router;

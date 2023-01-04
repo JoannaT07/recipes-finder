@@ -1,5 +1,5 @@
 import axios from "axios";
-import fs, { appendFile } from "fs";
+import fs from "fs";
 import {
   getLastPageNumber,
   getRecipe,
@@ -19,11 +19,11 @@ export interface Recipe {
 }
 
 const rootUrls = [
-  "https://www.przepisy.pl/przepisy/na-skroty/prosty-przepis",
   "https://www.przepisy.pl/przepisy/na-skroty/przepisy-z-4-skladnikow",
   "https://www.przepisy.pl/przepisy/na-skroty/przepisy-z-5-skladnikow",
   "https://www.przepisy.pl/przepisy/na-skroty/szybkie-przepisy",
-  "https://www.przepisy.pl/przepisy/na-skroty/tanie-dania"
+  "https://www.przepisy.pl/przepisy/na-skroty/tanie-dania",
+  "https://www.przepisy.pl/przepisy/na-skroty/prosty-przepis"
 ];
 
 const getPaginationUrlSuffix = (pageNumber: number) => {
@@ -34,11 +34,10 @@ const getPaginationUrlSuffix = (pageNumber: number) => {
   return paginationUrlSuffix;
 };
 
-const getRecipeUrls = async (url: string) => {
+const getRecipeUrls = async (url: string, lastPageNumber: number) => {
   const recipeUrlSuffixes: string[] = [];
-  for (let i = 1; i <= 2; i++) {
+  for (let i = 1; i <= lastPageNumber; i++) {
     const paginationUrlSuffix = getPaginationUrlSuffix(i);
-    console.log(paginationUrlSuffix);
     const recipeUrlSuffixesPortion = await getRecipeUrlSuffixes(
       `${url}${paginationUrlSuffix}`
     );
@@ -79,9 +78,12 @@ const appendRecipes = (recipe: Recipe | undefined, i: number) => {
 // }
 
 const scrap = async (url: string, i: number) => {
+  console.log(`Processing url ${url}`)
   const lastPageNumber = await getLastPageNumber(url);
   if (lastPageNumber) {
-    const recipeUrlSuffixes: string[] = await getRecipeUrls(url);
+    console.log(`Last page number for url ${url} is ${lastPageNumber}`)
+    const recipeUrlSuffixes: string[] = await getRecipeUrls(url, lastPageNumber);
+    console.log(`For recipes url ${url} was founded ${recipeUrlSuffixes.length} recipes`)
     for (const recipeUrlSuffix of recipeUrlSuffixes) {
       const recipe = await getRecipe(recipeUrlSuffix);
       if (recipe) {
@@ -95,6 +97,7 @@ const scrap = async (url: string, i: number) => {
         appendRecipes(recipe, i)
       }
     }
+    console.log(`End of url ${url} processing`)
   }
 };
 

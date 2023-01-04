@@ -1,16 +1,35 @@
 import mongoose from "mongoose";
-
 const Schema = mongoose.Schema;
-// const ObjectId = mongoose.Types.ObjectId;
 
-const Recipes = new Schema({
+const Recipe = new Schema({
+  id: {
+    type: String,
+  },
+  
   name: {
-    type: String
-  }
-//   instructions: {
-//     text: String,
-//     position: Number
-//   }
+    type: String,
+    required: true,
+  },
+
+  ingredients: [
+    {
+      id: {
+        type: String,
+        required: true,
+      },
+      quantity: {
+        type: String,
+        // required: true,
+      },
+    },
+  ],
+
+  instructions: [
+    {
+      type: String,
+      required: true,
+    },
+  ],
 });
 
-export const RecipesModel = mongoose.model("Recipes", Recipes)
+export default mongoose.models.Product || mongoose.model("Recipe", Recipe);

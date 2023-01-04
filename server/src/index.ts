@@ -1,25 +1,25 @@
-import express, { Request, Response } from "express";
-import cors from 'cors';
+import dotenv from "dotenv";
+import express from "express";
+import cors from "cors";
 import { connectDB } from "./database";
-import recipesRouter from './routes/recipes'
-import { processRawRecipes } from "./service/recipesSource";
+import ingredientsRouter from "./routes/ingredients"
+import recipesRouter from "./routes/recipes"
+import { processRawRecipes } from "./routes/recipesService";
+dotenv.config();
 
-
-const PORT = 5000;
+const port = process.env.PORT || 8080;
 export const app = express();
-app.use(express.json());
 
-app.use(cors());
-
-app.use('/recipes', recipesRouter)
-
-// app.use(express.static('./src/static'));
-const main = async () => {
-    // await connectDB();
-    app.listen(PORT, () => console.log("Server connected", PORT));
+const main = async() => {
+  await connectDB();
+  app.listen(port, () => console.log("Server connected", port));
 }
 
-main()
+app.use(express.json());
+app.use(cors());
+app.use("/api/ingredients", ingredientsRouter);
+app.use("/api/recipes", recipesRouter);
+// app.use(express.static('./src/static'));
 
-processRawRecipes()
-
+main();
+processRawRecipes();
