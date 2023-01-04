@@ -6,6 +6,9 @@ const Ingredients = new Schema({
     type: String,
     required: true,
   },
+  id: {
+    type: String,
+  }
 });
 
 export default mongoose.models.Product ||

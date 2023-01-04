@@ -15,7 +15,8 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "fs": "^0.0.1-security",
-    "mongoose": "^6.8.0"
+    "mongoose": "^6.8.0",
+    "short-uuid": "^4.2.2"
   },
   "devDependencies": {
     "@types/cors": "^2.8.13",
