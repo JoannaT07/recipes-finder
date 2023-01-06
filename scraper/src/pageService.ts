@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import cheerio, { AnyNode, CheerioAPI } from "cheerio";
 import { Ingredient } from ".";
 
@@ -7,9 +7,13 @@ export const getLastPageNumber = async (url: string) => {
     const res = await axios(url);
     const html = res.data;
     const mainPage = cheerio.load(html);
-    return Number(mainPage(".pagination__btn--outer", html).last().text());
+    let lastPageNumber = Number(mainPage(".pagination__btn--outer", html).last().text());
+    if(!lastPageNumber){
+      lastPageNumber = Number(mainPage(".pagination__btn:not(.pagination__btn--arrow)", html).last().text());
+    }
+    return lastPageNumber
   } catch (e) {
-    console.error(e);
+    handleApiError(e as AxiosError);
   }
 };
 
@@ -24,13 +28,13 @@ export const getRecipeUrlSuffixes = async (url: string) => {
       })
       .toArray();
   } catch (e) {
-    console.error(e);
+    handleApiError(e as AxiosError);
   }
 };
 
 export const getRecipe = async(recipeUrlSuffix:string) => {
     try{
-        const res = await  axios(`https://www.przepisy.pl/${recipeUrlSuffix}`)
+        const res = await  axios(`https://www.przepisy.pl${recipeUrlSuffix}`)
         const html = res.data;
         const recipePage = cheerio.load(html);
         return {
@@ -40,7 +44,7 @@ export const getRecipe = async(recipeUrlSuffix:string) => {
           image: getImageUrl(recipePage, html)
         };
     } catch (e) {
-        console.error(e);
+        handleApiError(e as AxiosError);
       }
 }
 
@@ -72,4 +76,8 @@ const getName = (recipePage: CheerioAPI, html: AnyNode): string => {
       return recipePage(this).find("img.ng-star-inserted").attr("src");
     })[0];
     return imageUrl?.match(/^https:.*$/) ? imageUrl : undefined
+  }
+
+  const handleApiError= (e: AxiosError) =>{
+    console.error(`API error with code ${e.code} for url ${e.config?.url}`)
   }
