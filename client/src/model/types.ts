@@ -8,6 +8,7 @@ export type Recipes = Recipe[]
 
 export interface RecipeIngredient {
     id: string
+    name: string
     quantity: string | null
 }
 export interface Recipe {

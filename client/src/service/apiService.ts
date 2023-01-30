@@ -12,12 +12,25 @@ export const getIngredients = async() => {
     }
 }
 
-export const getRecipes = async(ingredients?: Ingredients) => {
+export const getRecipes = async(ingredients?: Ingredients, tag?: string) => {
     try{
-        if(ingredients && ingredients.length > 0){
+        if (tag && !ingredients) {
+            return (await axios.get(`${API_URL}/recipes?tag=${tag}`)).data
+        } else if(ingredients && ingredients.length > 0 && !tag){
             return (await axios.get(`${API_URL}/recipes?ingredients=${ingredients.map(({id}) => id).join(",")}`)).data
+        } else if (ingredients && ingredients.length > 0 && tag) {
+            return (await axios.get(`${API_URL}/recipes?ingredients=${ingredients.map(({id}) => id).join(",")}&tag=${tag}`)).data
         }
         return (await axios.get(`${API_URL}/recipes`)).data
+    } catch(e){
+        handleApiError(e as AxiosError)
+    }
+}
+
+export const getFoundedRecipe = async(recipeId?: string) => {
+    try{
+        const res = await axios.get(`${API_URL}/recipes/przepis?recipeId=${recipeId}`)
+        return res.data;
     } catch(e){
         handleApiError(e as AxiosError)
     }

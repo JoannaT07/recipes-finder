@@ -1,37 +1,41 @@
-import { FC, useEffect, useState } from "react";
-import axios from "axios";
+import { FC, MouseEvent, useEffect, useState } from "react";
 import { getRecipes } from "../service/apiService";
 import { Ingredients, Recipes } from "../model/types";
-import { TiDelete } from "react-icons/ti";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
-  choosenIngredients: Ingredients
+  choosenIngredients: Ingredients;
+  selectedCategory?: string;
 };
 
-export const RecipesSelector: FC<Props> = ({choosenIngredients}) => {
+export const RecipesSelector: FC<Props> = ({ choosenIngredients, selectedCategory }) => {
   const [recipes, setRecipes] = useState<Recipes>([]);
+  let navigateToRecipe = useNavigate();
 
-  // useEffect(() => {
-  //   getRecipes().then(setRecipes);
-  // }, []);
+  useEffect(() => {
+    getRecipes(choosenIngredients, selectedCategory).then(setRecipes);
+  }, [choosenIngredients, selectedCategory]);
 
-  useEffect(()=>{
-    getRecipes(choosenIngredients).then(setRecipes);
-  },[choosenIngredients])
+  const handleRecipeClick = (e: MouseEvent) => {
+    navigateToRecipe(`/${e.currentTarget.id}`);
+  }
 
   return (
-  <div className="recipe-list">
-    {recipes.map((recipe, index) => (
-      index <= 50 && (
-        <div className="recipe">
-          <div className="recipe-img">
-              {/* <img src="../../server/output/img/3-bit-ciasto.jpg" alt=""/> */}
-              <img src={`../public/img/${recipe.image}`} alt=""/>
+    <div className="recipe-list">
+      {recipes.map(
+        (recipe, index) =>
+            <div className="recipe" id={recipe.id} onClick={handleRecipeClick}>
+              <div className="recipe-img">
+                <img
+                  src={`../public/img/${
+                    recipe.image !== undefined ? recipe.image : "default"
+                  }.jpg`}
+                  alt=""
+                />
               </div>
-             <p>{recipe.name}</p>
-           </div>
-      )
-    ))}
-  </div>
-  )
+              <p>{recipe.name}</p>
+            </div>
+      )}
+    </div>
+  );
 };
