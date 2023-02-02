@@ -4,7 +4,7 @@ import { getFoundedRecipe } from "../service/apiService";
 import { Recipe } from "../model/types";
 
 
-export const RecipeCard = () => {
+export const RecipePage = () => {
   const { recipeId } = useParams();
   const [foundedRecipe, setfoundedRecipe] = useState<Recipe>();
   let navigateToStart = useNavigate();

@@ -1,7 +1,8 @@
-import { FC, MouseEvent, useEffect, useState } from "react";
+import { FC, MouseEvent, useCallback, useEffect, useRef, useState } from "react";
 import { getRecipes } from "../service/apiService";
 import { Ingredients, Recipes } from "../model/types";
 import { useNavigate } from "react-router-dom";
+import { useRecipes } from "../hooks/useRecipes";
 
 type Props = {
   choosenIngredients: Ingredients;
@@ -9,12 +10,22 @@ type Props = {
 };
 
 export const RecipesSelector: FC<Props> = ({ choosenIngredients, selectedCategory }) => {
-  const [recipes, setRecipes] = useState<Recipes>([]);
   let navigateToRecipe = useNavigate();
-
-  useEffect(() => {
-    getRecipes(choosenIngredients, selectedCategory).then(setRecipes);
-  }, [choosenIngredients, selectedCategory]);
+  const [page, setPage] = useState(1)
+  const {recipes, isLoading, hasNextPage} = useRecipes(page,setPage, choosenIngredients,  selectedCategory)
+  
+  const observer = useRef<IntersectionObserver>()
+  const recipeRef = useCallback((recipeNode: any)=>{
+    console.log(isLoading, hasNextPage)
+    if(isLoading) return;
+    if(observer.current) observer.current.disconnect()
+    observer.current = new IntersectionObserver((recipeNodes)=>{
+      if(recipeNodes[0].isIntersecting && hasNextPage){
+        setPage(prevValue => prevValue + 1)
+      }
+    })
+    if(recipeNode) observer.current.observe(recipeNode)
+  }, [isLoading, hasNextPage])
 
   const handleRecipeClick = (e: MouseEvent) => {
     navigateToRecipe(`/${e.currentTarget.id}`);
@@ -24,7 +35,7 @@ export const RecipesSelector: FC<Props> = ({ choosenIngredients, selectedCategor
     <div className="recipe-list">
       {recipes.map(
         (recipe, index) =>
-            <div className="recipe" id={recipe.id} onClick={handleRecipeClick}>
+            <div ref={index === recipes.length - 10 ? recipeRef : null} key={index} className="recipe" id={recipe.id} onClick={handleRecipeClick}>
               <div className="recipe-img">
                 <img
                   src={`../public/img/${
@@ -36,6 +47,7 @@ export const RecipesSelector: FC<Props> = ({ choosenIngredients, selectedCategor
               <p>{recipe.name}</p>
             </div>
       )}
+      {isLoading && <div>...</div>}
     </div>
   );
 };
