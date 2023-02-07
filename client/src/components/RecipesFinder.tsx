@@ -22,7 +22,6 @@ const RecipesFinder: FC = () => {
       <IngredientsSelector
             choosenIngredients={choosenIngredients}
             setChoosenIngredients={setChoosenIngredients}
-            selectedCategory={selectedCategory}
             setSelectedCategory={setSelectedCategory}
           />
       <RecipesSelector choosenIngredients={choosenIngredients} selectedCategory={selectedCategory} />

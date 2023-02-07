@@ -15,23 +15,16 @@ export const getIngredients = async () => {
 export const getRecipes = async (
   page: number,
   ingredients?: Ingredients,
-  tag?: string
+  category?: string
 ): Promise<Recipes | undefined> => {
   const query = getQueryString({
     page,
-    ...(ingredients?.length && { ingredients: ingredients.map(ing => ing.id).join(",") }),
-    ...(tag && { tag }),
+    ...(ingredients?.length && {
+      ingredients: ingredients.map((ing) => ing.id).join(","),
+    }),
+    ...(category && { category }),
   });
-  // console.log(query)
-
   try {
-    // if (tag && !ingredients?.length) {
-    //     return (await axios.get(`${API_URL}/recipes?tag=${tag}`)).data
-    // } else if(ingredients?.length && !tag){
-    //     return (await axios.get(`${API_URL}/recipes?ingredients=${ingredients.map(({id}) => id).join(",")}`)).data
-    // } else if (ingredients?.length && tag) {
-    //     return (await axios.get(`${API_URL}/recipes?ingredients=${ingredients.map(({id}) => id).join(",")}&tag=${tag}`)).data
-    // }
     return (await axios.get(`${API_URL}/recipes${query}`)).data;
   } catch (e) {
     handleApiError(e as AxiosError);

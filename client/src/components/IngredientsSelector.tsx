@@ -1,4 +1,4 @@
-import { FC, useContext, useEffect, useState } from "react";
+import { FC, useContext, useState } from "react";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import { TiDelete } from "react-icons/ti";
 import { IngredientContext } from "../context/ingredientContext";
@@ -6,12 +6,13 @@ import { Ingredients } from "../model/types";
 import Select from "react-select";
 
 const options: SelectedCategory[] = [
-  { value: "Wszystkie", label: "Wszystkie" },
-  { value: "Śniadanie", label: "Śniadanie" },
-  { value: "Obiad", label: "Obiad" },
-  { value: "Kolacja", label: "Kolacja" },
-  { value: "Przekąski", label: "Przekąski" },
-  { value: "Desery", label: "Desery" }
+  { value: "wszystkie", label: "Wszystkie" },
+  { value: "śniadanie", label: "Śniadanie" },
+  { value: "obiad", label: "Obiad" },
+  { value: "kolacja", label: "Kolacja" },
+  { value: "przekąski", label: "Przekąski" },
+  { value: "desery", label: "Desery" },
+  { value: "napoje", label: "Napoje" },
 ];
 
 interface SelectedCategory {
@@ -22,26 +23,19 @@ interface SelectedCategory {
 type Props = {
   choosenIngredients: Ingredients;
   setChoosenIngredients: any;
-  selectedCategory?: string;
-  setSelectedCategory: any
+  setSelectedCategory: any;
 };
 
 export const IngredientsSelector: FC<Props> = ({
   choosenIngredients,
   setChoosenIngredients,
-  selectedCategory,
-  setSelectedCategory
+  setSelectedCategory,
 }) => {
   const ingredients = useContext(IngredientContext);
   const sortedIngredients = ingredients.sort((a, b) =>
     a.name > b.name ? 1 : -1
   );
-  // const ingredientNames = ingredients.map(({ name }) => name).sort();
   const [wantedIngredient, setWantedIngredient] = useState("");
-
-  useEffect(() => {
-    console.log(choosenIngredients);
-  }, [choosenIngredients]);
 
   const handleAddIngredient = (name: string, id: string) => {
     setChoosenIngredients([...choosenIngredients, { name, id }]);
@@ -54,15 +48,9 @@ export const IngredientsSelector: FC<Props> = ({
     );
   };
 
-  const handleCategoryChange = (selectedCategory: SelectedCategory)=> {
-    console.log("handleChange", selectedCategory.value);
-    setSelectedCategory(selectedCategory.value.toLocaleLowerCase())
-  }
-
-  useEffect(() => {
-    console.log(selectedCategory)
-  }, [selectedCategory])
-  
+  const handleCategoryChange = (selectedCategory: SelectedCategory) => {
+    selectedCategory.value === "Wszystkie" ? setSelectedCategory() : setSelectedCategory(selectedCategory.value);
+  };
 
   return (
     <div className="search-engine">

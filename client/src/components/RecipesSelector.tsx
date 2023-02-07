@@ -1,6 +1,5 @@
-import { FC, MouseEvent, useCallback, useEffect, useRef, useState } from "react";
-import { getRecipes } from "../service/apiService";
-import { Ingredients, Recipes } from "../model/types";
+import { FC, MouseEvent, useCallback, useRef, useState } from "react";
+import { Ingredients } from "../model/types";
 import { useNavigate } from "react-router-dom";
 import { useRecipes } from "../hooks/useRecipes";
 
