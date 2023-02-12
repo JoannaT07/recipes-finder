@@ -1,11 +1,11 @@
-import { FC, useContext, useState } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import { TiDelete } from "react-icons/ti";
 import { IngredientContext } from "../context/ingredientContext";
 import { Ingredients } from "../model/types";
 import Select from "react-select";
 
-const options: SelectedCategory[] = [
+export const options: SelectedCategory[] = [
   { value: "wszystkie", label: "Wszystkie" },
   { value: "śniadanie", label: "Śniadanie" },
   { value: "obiad", label: "Obiad" },
@@ -23,12 +23,14 @@ interface SelectedCategory {
 type Props = {
   choosenIngredients: Ingredients;
   setChoosenIngredients: any;
+  selectedCategory: any;
   setSelectedCategory: any;
 };
 
 export const IngredientsSelector: FC<Props> = ({
   choosenIngredients,
   setChoosenIngredients,
+  selectedCategory,
   setSelectedCategory,
 }) => {
   const ingredients = useContext(IngredientContext);
@@ -40,16 +42,22 @@ export const IngredientsSelector: FC<Props> = ({
   const handleAddIngredient = (name: string, id: string) => {
     setChoosenIngredients([...choosenIngredients, { name, id }]);
     setWantedIngredient("");
+    window.scrollTo(0, 0);
   };
 
   const handleDelete = (id: string) => {
     setChoosenIngredients(
       choosenIngredients.filter((ingredient) => id !== ingredient.id)
     );
+    window.scrollTo(0, 0);
   };
 
   const handleCategoryChange = (selectedCategory: SelectedCategory) => {
-    selectedCategory.value === "Wszystkie" ? setSelectedCategory() : setSelectedCategory(selectedCategory.value);
+    window.scrollTo(0, 0);
+    selectedCategory.value === "wszystkie"
+      ? setSelectedCategory()
+      : setSelectedCategory(selectedCategory.value);
+    localStorage.setItem("category", JSON.stringify(selectedCategory.value));
   };
 
   return (
@@ -82,8 +90,8 @@ export const IngredientsSelector: FC<Props> = ({
         <Select
           className={"categories"}
           options={options}
-          defaultValue={options[0]}
           onChange={handleCategoryChange}
+          value={options.find((val) => val.value === selectedCategory)}
           theme={(theme) => ({
             ...theme,
             borderRadius: 0,

@@ -1,13 +1,25 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { Ingredient, Ingredients, Recipes } from "../model/types";
+import { Ingredients, Recipes } from "../model/types";
 import { getRecipes } from "../service/apiService";
+import useEffectUpdate from "./useEffectUpdate";
 
 export const useRecipes = ( page:number,setPage:Dispatch<SetStateAction<number>>, ingredients:Ingredients, category:string | undefined) => {
-  const [recipes, setRecipes] = useState<Recipes>([]);
+  const [recipes, setRecipes] = useState<Recipes>(JSON.parse(localStorage.getItem("recipes")!) || []);
   const [isLoading, setIsLoading] = useState(false);
-  const [hasNextPage, setHasNextPage] = useState(false);
-
+  const [hasNextPage, setHasNextPage] = useState(true);
+  
   useEffect(() => {
+    localStorage.setItem("recipes", JSON.stringify(recipes))
+  }, [recipes])
+
+  useEffect(()=>{
+    if(!recipes.length){
+      getRecipes(page).then(data => data && setRecipes(data))
+    }
+  }, [])
+
+  useEffectUpdate(() => {
+    console.log("page sie ladnie zwieksza", page)
     if(page > 1){
         setIsLoading(true)
 
@@ -21,7 +33,7 @@ export const useRecipes = ( page:number,setPage:Dispatch<SetStateAction<number>>
 
   }, [page])
 
-  useEffect(()=>{
+  useEffectUpdate(()=>{
     setPage(1)
     setIsLoading(true)
 

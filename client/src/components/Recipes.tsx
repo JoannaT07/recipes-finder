@@ -1,4 +1,4 @@
-import { FC, MouseEvent, useCallback, useRef, useState } from "react";
+import { FC, MouseEvent, useCallback, useEffect, useRef, useState } from "react";
 import { Ingredients } from "../model/types";
 import { useNavigate } from "react-router-dom";
 import { useRecipes } from "../hooks/useRecipes";
@@ -8,14 +8,18 @@ type Props = {
   selectedCategory?: string;
 };
 
-export const RecipesSelector: FC<Props> = ({ choosenIngredients, selectedCategory }) => {
+export const Recipes: FC<Props> = ({ choosenIngredients, selectedCategory }) => {
+
   let navigateToRecipe = useNavigate();
-  const [page, setPage] = useState(1)
-  const {recipes, isLoading, hasNextPage} = useRecipes(page,setPage, choosenIngredients,  selectedCategory)
-  
+  const [page, setPage] = useState(() => Number(JSON.parse(localStorage.getItem("page")!)) || 1)
+  const {recipes, isLoading, hasNextPage} = useRecipes(page,setPage, choosenIngredients,  selectedCategory);
+
+  useEffect(() => {
+    localStorage.setItem("page", JSON.stringify(page))
+  }, [page])
+
   const observer = useRef<IntersectionObserver>()
   const recipeRef = useCallback((recipeNode: any)=>{
-    console.log(isLoading, hasNextPage)
     if(isLoading) return;
     if(observer.current) observer.current.disconnect()
     observer.current = new IntersectionObserver((recipeNodes)=>{

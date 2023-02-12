@@ -3,13 +3,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getFoundedRecipe } from "../service/apiService";
 import { Recipe } from "../model/types";
 
-
 export const RecipePage = () => {
   const { recipeId } = useParams();
   const [foundedRecipe, setfoundedRecipe] = useState<Recipe>();
   let navigateToStart = useNavigate();
 
   useEffect(() => {
+    window.scrollTo(0,0)
     getFoundedRecipe(recipeId).then(setfoundedRecipe)
   }, []);
 
