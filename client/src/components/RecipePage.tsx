@@ -1,28 +1,28 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { getFoundedRecipe } from "../service/apiService";
 import { Recipe } from "../model/types";
 
 export const RecipePage = () => {
   const { recipeId } = useParams();
   const [foundedRecipe, setfoundedRecipe] = useState<Recipe>();
-  let navigateToStart = useNavigate();
 
   useEffect(() => {
-    window.scrollTo(0,0)
-    getFoundedRecipe(recipeId).then(setfoundedRecipe)
+    window.scrollTo(0, 0);
+    getFoundedRecipe(recipeId).then(setfoundedRecipe);
   }, []);
 
   return (
     <div className="recipe-container">
       <div className="top-section">
         <div className="nav">
-          <div className="logo-sm" onClick={() => navigateToStart("/")}>
+          <div className="logo-sm">
+            <a href="/">
             <img
               src="../public/logo_pom.png"
               alt=""
               style={{ height: "74px" }}
-            />
+            /></a>
           </div>
         </div>
       </div>
@@ -61,6 +61,7 @@ export const RecipePage = () => {
             ))}
           </div>
         </div>
+        <button className="print" onClick={() => print()}>Drukuj przepis</button>
       </div>
     </div>
   );

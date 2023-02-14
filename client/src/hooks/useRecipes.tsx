@@ -19,10 +19,8 @@ export const useRecipes = ( page:number,setPage:Dispatch<SetStateAction<number>>
   }, [])
 
   useEffectUpdate(() => {
-    console.log("page sie ladnie zwieksza", page)
     if(page > 1){
         setIsLoading(true)
-
         getRecipes(page, ingredients, category)
         .then(data=>{
             data?.length && setRecipes(prevState => [...prevState, ...data])
@@ -30,13 +28,11 @@ export const useRecipes = ( page:number,setPage:Dispatch<SetStateAction<number>>
             setIsLoading(false)
         })
     }
-
   }, [page])
 
   useEffectUpdate(()=>{
     setPage(1)
     setIsLoading(true)
-
     getRecipes(1, ingredients, category)
     .then(data=>{
         data?.length ? setRecipes(data) : setRecipes([])

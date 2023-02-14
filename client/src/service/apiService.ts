@@ -12,6 +12,15 @@ export const getIngredients = async () => {
   }
 };
 
+const getQueryString = (input: any) => {
+  return (
+    "?" +
+    Object.keys(input)
+      .map((key) => `${key}=${input[key]}`)
+      .join("&")
+  );
+};
+
 export const getRecipes = async (
   page: number,
   ingredients?: Ingredients,
@@ -29,15 +38,6 @@ export const getRecipes = async (
   } catch (e) {
     handleApiError(e as AxiosError);
   }
-};
-
-const getQueryString = (input: any) => {
-  return (
-    "?" +
-    Object.keys(input)
-      .map((key) => `${key}=${input[key]}`)
-      .join("&")
-  );
 };
 
 export const getFoundedRecipe = async (recipeId?: string) => {

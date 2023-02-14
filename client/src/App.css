@@ -124,7 +124,7 @@
   top: 59px;
   display: none;
   flex-direction: column;
-  height: 440px;
+  max-height: 440px;
   width: 600px;
   background: white;
   color: black;
@@ -334,10 +334,24 @@ h2 {
 
 .bottom-section {
   padding-block: 2.4em;
-  margin-bottom: 3em;
+  margin-bottom: 2em;
   border-bottom: 1px solid rgb(177, 176, 176);
 }
 
 .instruction p {
   padding-block: 0.8em;
+}
+
+.print {
+  padding: 10px 20px;
+  margin-bottom: 2em;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  background-color: #e37b05;
+  cursor: pointer;
+}
+
+.print:hover {
+  background-color: #d37204;
 }

@@ -13,10 +13,10 @@ router.get("/", async (req: Request, res: Response) => {
     }));
     let recipes = await RecipeModel.find({
       ...(ingredient && { ingredients: { $all: query } }),
-      ...(category && { tags: {$in: getTags(category)} }),
+      ...(category && category !== "wszystkie" && { tags: {$in: getTags(category)} }),
     })
-      .skip(getStartIndex(page, 50))
-      .limit(50);
+      .skip(getStartIndex(page, 48))
+      .limit(48);
     res.json(recipes);
   } catch (err) {
     res.json({ message: err });

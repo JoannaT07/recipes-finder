@@ -1,4 +1,4 @@
-import { FC, useContext, useEffect, useState } from "react";
+import { FC, useContext, useState } from "react";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import { TiDelete } from "react-icons/ti";
 import { IngredientContext } from "../context/ingredientContext";
@@ -40,23 +40,22 @@ export const IngredientsSelector: FC<Props> = ({
   const [wantedIngredient, setWantedIngredient] = useState("");
 
   const handleAddIngredient = (name: string, id: string) => {
+    window.scrollTo(0, 0);
     setChoosenIngredients([...choosenIngredients, { name, id }]);
     setWantedIngredient("");
-    window.scrollTo(0, 0);
+    localStorage.setItem("ingredients", JSON.stringify([...choosenIngredients, { name, id }]));
   };
 
   const handleDelete = (id: string) => {
+    window.scrollTo(0, 0);
     setChoosenIngredients(
       choosenIngredients.filter((ingredient) => id !== ingredient.id)
     );
-    window.scrollTo(0, 0);
   };
 
   const handleCategoryChange = (selectedCategory: SelectedCategory) => {
     window.scrollTo(0, 0);
-    selectedCategory.value === "wszystkie"
-      ? setSelectedCategory()
-      : setSelectedCategory(selectedCategory.value);
+    setSelectedCategory(selectedCategory.value);
     localStorage.setItem("category", JSON.stringify(selectedCategory.value));
   };
 
@@ -110,7 +109,7 @@ export const IngredientsSelector: FC<Props> = ({
         {choosenIngredients.length > 0 && (
           <>
             {choosenIngredients.map((choosen) => (
-              <div className="choosen-ingredients">
+              <div key={choosen.name} className="choosen-ingredients">
                 <span>{choosen.name}</span>
                 <button onClick={() => handleDelete(choosen.id)}>
                   <TiDelete />

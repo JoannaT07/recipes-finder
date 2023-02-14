@@ -9,15 +9,14 @@ type Props = {
 };
 
 export const Recipes: FC<Props> = ({ choosenIngredients, selectedCategory }) => {
-
-  let navigateToRecipe = useNavigate();
   const [page, setPage] = useState(() => Number(JSON.parse(localStorage.getItem("page")!)) || 1)
-  const {recipes, isLoading, hasNextPage} = useRecipes(page,setPage, choosenIngredients,  selectedCategory);
+  const {recipes, isLoading, hasNextPage} = useRecipes(page, setPage, choosenIngredients, selectedCategory);
+  const navigateToRecipe = useNavigate();
 
   useEffect(() => {
     localStorage.setItem("page", JSON.stringify(page))
   }, [page])
-
+  
   const observer = useRef<IntersectionObserver>()
   const recipeRef = useCallback((recipeNode: any)=>{
     if(isLoading) return;
