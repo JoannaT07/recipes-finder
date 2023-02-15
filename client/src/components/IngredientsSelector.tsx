@@ -1,4 +1,4 @@
-import { FC, useContext, useState } from "react";
+import { FC, MouseEventHandler, useContext, useEffect, useState } from "react";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import { TiDelete } from "react-icons/ti";
 import { IngredientContext } from "../context/ingredientContext";
@@ -37,13 +37,27 @@ export const IngredientsSelector: FC<Props> = ({
   const sortedIngredients = ingredients.sort((a, b) =>
     a.name > b.name ? 1 : -1
   );
+  const [isOpen, setIsOpen] = useState(false);
   const [wantedIngredient, setWantedIngredient] = useState("");
+
+  useEffect(() => {
+    const closeDropdown = (e: MouseEvent) => {
+      if ((e.target as HTMLInputElement).tagName !== "INPUT") {
+        setIsOpen(false);
+      }
+    };
+    document.body.addEventListener("click", closeDropdown);
+    return () => document.body.removeEventListener("click", closeDropdown);
+  }, []);
 
   const handleAddIngredient = (name: string, id: string) => {
     window.scrollTo(0, 0);
     setChoosenIngredients([...choosenIngredients, { name, id }]);
     setWantedIngredient("");
-    localStorage.setItem("ingredients", JSON.stringify([...choosenIngredients, { name, id }]));
+    localStorage.setItem(
+      "ingredients",
+      JSON.stringify([...choosenIngredients, { name, id }])
+    );
   };
 
   const handleDelete = (id: string) => {
@@ -67,24 +81,25 @@ export const IngredientsSelector: FC<Props> = ({
           <input
             type="text"
             value={wantedIngredient}
+            onClick={() => setIsOpen((prev) => !prev)}
             onChange={(e) => setWantedIngredient(e.target.value)}
           />
-          {wantedIngredient && (
-            <div className="ingredients-popup show">
-              <ul>
-                {sortedIngredients
-                  .filter(
-                    ({ name }) =>
-                      name.toLowerCase().indexOf(wantedIngredient) !== -1
-                  )
-                  .map(({ name, id }) => (
-                    <li onClick={() => handleAddIngredient(name, id)} key={id}>
-                      {name}
-                    </li>
-                  ))}
-              </ul>
-            </div>
-          )}
+          <div
+            className={isOpen ? "ingredients-popup show" : "ingredients-popup"}
+          >
+            <ul>
+              {sortedIngredients
+                .filter(
+                  ({ name }) =>
+                    name.toLowerCase().indexOf(wantedIngredient) !== -1
+                )
+                .map(({ name, id }) => (
+                  <li onClick={() => handleAddIngredient(name, id)} key={id}>
+                    {name}
+                  </li>
+                ))}
+            </ul>
+          </div>
         </div>
         <Select
           className={"categories"}
