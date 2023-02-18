@@ -4,7 +4,10 @@ name: ec2-deploy
 on:
   push:
     branches:
-      - master
+      - aws
+  pull_request:
+    branches:
+      - main
 
 jobs:
   deploy:
@@ -21,4 +24,4 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
           REMOTE_HOST: ${{ secrets.HOST_DNS }}
           REMOTE_USER: ${{ secrets.USERNAME }}
-          TARGET: ${{ secrets.TARGET_DIR }}
+          TARGET: recipes
