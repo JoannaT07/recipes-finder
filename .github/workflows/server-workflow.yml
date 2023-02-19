@@ -3,7 +3,7 @@ name: server-workflow
 on:
   push:
     branches:
-      - aws
+      - main
   pull_request:
     branches:
       - main
