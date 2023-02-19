@@ -7,7 +7,7 @@ import recipesRouter from "./routes/recipes"
 import { processRawRecipes } from "./routes/recipesService";
 dotenv.config();
 
-const port = process.env.PORT || 8080;
+const port = 8081;
 export const app = express();
 
 const main = async() => {
@@ -19,7 +19,6 @@ app.use(express.json());
 app.use(cors());
 app.use("/api/ingredients", ingredientsRouter);
 app.use("/api/recipes", recipesRouter);
-// app.use(express.static('./src/static'));
 
 main();
 processRawRecipes();

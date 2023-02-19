@@ -2,12 +2,13 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const Ingredients = new Schema({
-  name: {
+  id: {
     type: String,
     required: true,
   },
-  id: {
+  name: {
     type: String,
+    required: true,
   }
 });
 

@@ -4,8 +4,9 @@ const Schema = mongoose.Schema;
 const Recipe = new Schema({
   id: {
     type: String,
+    required: true,
   },
-  
+
   name: {
     type: String,
     required: true,
@@ -17,17 +18,27 @@ const Recipe = new Schema({
         type: String,
         required: true,
       },
+      name: {
+        type: String,
+        required: true,
+      },
       quantity: {
         type: String,
-        // required: true,
       },
     },
   ],
-
   instructions: [
     {
       type: String,
       required: true,
+    },
+  ],
+  image: {
+    type: String,
+  },
+  tags: [
+    {
+      type: String,
     },
   ],
 });

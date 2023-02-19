@@ -93,6 +93,7 @@ const scrap = async (url: string, i: number) => {
           if (!fs.existsSync(`../server/output/img/${imageName}.jpg`)) {
             await saveImage(recipe.image, imageName);
           }
+          recipe.image = imageName
         }
         appendRecipes(recipe, i)
       }
