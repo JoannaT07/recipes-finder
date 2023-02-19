@@ -23,7 +23,7 @@ jobs:
           REMOTE_HOST: ${{ secrets.HOST_DNS }}
           REMOTE_USER: ${{ secrets.USERNAME }}
           SOURCE: ./server
-          TARGET: recipes/server
+          TARGET: recipes
       - name: Executing remote ssh commands using ssh key
         uses: appleboy/ssh-action@master
         with:
