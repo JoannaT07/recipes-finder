@@ -1,4 +1,4 @@
-import { FC, MouseEventHandler, useContext, useEffect, useState } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import { TiDelete } from "react-icons/ti";
 import { IngredientContext } from "../context/ingredientContext";
@@ -21,15 +21,15 @@ interface SelectedCategory {
 }
 
 type Props = {
-  choosenIngredients: Ingredients;
-  setChoosenIngredients: any;
+  chosenIngredients: Ingredients;
+  setChosenIngredients: any;
   selectedCategory: any;
   setSelectedCategory: any;
 };
 
 export const IngredientsSelector: FC<Props> = ({
-  choosenIngredients,
-  setChoosenIngredients,
+  chosenIngredients,
+  setChosenIngredients,
   selectedCategory,
   setSelectedCategory,
 }) => {
@@ -52,22 +52,23 @@ export const IngredientsSelector: FC<Props> = ({
 
   const handleAddIngredient = (name: string, id: string) => {
     window.scrollTo(0, 0);
-    setChoosenIngredients([...choosenIngredients, { name, id }]);
+    setChosenIngredients([...chosenIngredients, { name, id }]);
     setWantedIngredient("");
     localStorage.setItem(
       "ingredients",
-      JSON.stringify([...choosenIngredients, { name, id }])
+      JSON.stringify([...chosenIngredients, { name, id }])
     );
   };
 
   const handleDelete = (id: string) => {
     window.scrollTo(0, 0);
-    setChoosenIngredients(
-      choosenIngredients.filter((ingredient) => id !== ingredient.id)
+    setChosenIngredients(
+      chosenIngredients.filter((ingredient) => id !== ingredient.id)
     );
   };
 
-  const handleCategoryChange = (selectedCategory: SelectedCategory) => {
+  const handleCategoryChange = (selectedCategory: SelectedCategory | null) => {
+    if(!selectedCategory) return;
     window.scrollTo(0, 0);
     setSelectedCategory(selectedCategory.value);
     localStorage.setItem("category", JSON.stringify(selectedCategory.value));
@@ -120,13 +121,13 @@ export const IngredientsSelector: FC<Props> = ({
           })}
         ></Select>
       </div>
-      <div className="choosen">
-        {choosenIngredients.length > 0 && (
+      <div className="chosen">
+        {chosenIngredients.length > 0 && (
           <>
-            {choosenIngredients.map((choosen) => (
-              <div key={choosen.name} className="choosen-ingredients">
-                <span>{choosen.name}</span>
-                <button onClick={() => handleDelete(choosen.id)}>
+            {chosenIngredients.map((chosen) => (
+              <div key={chosen.name} className="chosen-ingredients">
+                <span>{chosen.name}</span>
+                <button onClick={() => handleDelete(chosen.id)}>
                   <TiDelete />
                 </button>
               </div>

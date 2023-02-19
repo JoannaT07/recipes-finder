@@ -5,7 +5,7 @@ import { Ingredients } from "../model/types";
 
 
 const RecipesFinder: FC = () => {
-  const [choosenIngredients, setChoosenIngredients] = useState<Ingredients>(() => JSON.parse(localStorage.getItem("ingredients")!) || []);
+  const [chosenIngredients, setChosenIngredients] = useState<Ingredients>(() => JSON.parse(localStorage.getItem("ingredients")!) || []);
   const [selectedCategory, setSelectedCategory] = useState<any>(() => JSON.parse(localStorage.getItem("category")!) || options[0].value);
 
   return (
@@ -15,7 +15,7 @@ const RecipesFinder: FC = () => {
           <div className="logo-sm">
             <a href="/">
             <img
-              src="../public/logo_pom.png"
+              src="../public/img/logo.png"
               alt=""
               style={{ height: "74px" }}
             /></a>
@@ -24,13 +24,13 @@ const RecipesFinder: FC = () => {
       </div>
       <div className="background-img"></div>
       <IngredientsSelector
-        choosenIngredients={choosenIngredients}
-        setChoosenIngredients={setChoosenIngredients}
+        chosenIngredients={chosenIngredients}
+        setChosenIngredients={setChosenIngredients}
         selectedCategory={selectedCategory}
         setSelectedCategory={setSelectedCategory}
       />
       <Recipes
-        choosenIngredients={choosenIngredients}
+        chosenIngredients={chosenIngredients}
         selectedCategory={selectedCategory}
       />
     </div>

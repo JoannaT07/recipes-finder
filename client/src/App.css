@@ -15,7 +15,7 @@
 }
 
 .background-img {
-  background-image: url(../public/h2.jpg);
+  background-image: url(../public/img/background.jpg);
   background-size: cover;
   background-attachment: static;
   height: 40vh;
@@ -85,7 +85,7 @@
   cursor: pointer;
 }
 
-.choosen {
+.chosen {
   position: sticky;
   top: 79px;
   display: flex;
@@ -96,7 +96,7 @@
   background-color: white;
 }
 
-.choosen-ingredients {
+.chosen-ingredients {
   display: flex;
   align-items: center;
   padding: 5px 6px 5px 12px;
@@ -109,7 +109,7 @@
   font-weight: 700;
 }
 
-.choosen-ingredients button {
+.chosen-ingredients button {
   display: flex;
   margin-left: 8px;
   font-size: 26px;
@@ -172,7 +172,7 @@
   .categories {
     width: 100%;
   }
-  .choosen {
+  .chosen {
     width: 100%;
   }
   .ingredients-popup {

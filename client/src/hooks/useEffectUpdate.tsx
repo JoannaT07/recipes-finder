@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react"
+import { useEffect, useRef } from "react"
 
 const useEffectUpdate = (func: any, dep: any) => {
     const initialized = useRef(false)

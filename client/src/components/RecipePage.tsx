@@ -19,7 +19,7 @@ export const RecipePage = () => {
           <div className="logo-sm">
             <a href="/">
             <img
-              src="../public/logo_pom.png"
+              src="../public/img/logo.png"
               alt=""
               style={{ height: "74px" }}
             /></a>

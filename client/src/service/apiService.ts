@@ -1,7 +1,6 @@
 import axios, { AxiosError } from "axios";
 import { Ingredients, Recipes } from "../model/types";
-
-const API_URL = "http://localhost:3000/api";
+import { API_URL } from "../cfg";
 
 export const getIngredients = async () => {
   try {
