@@ -16,7 +16,6 @@ const Recipe = new Schema({
     {
       id: {
         type: String,
-        required: true,
       },
       name: {
         type: String,
