@@ -44,7 +44,7 @@ export const RecipePage = () => {
           </div>
           <div className="recipe-photo">
             <img
-              src={`../public/img/${
+              src={`/img/${
                 foundedRecipe?.image !== undefined
                   ? foundedRecipe.image
                   : "default"
