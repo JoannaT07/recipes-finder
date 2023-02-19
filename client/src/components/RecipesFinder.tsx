@@ -15,7 +15,7 @@ const RecipesFinder: FC = () => {
           <div className="logo-sm">
             <a href="/">
             <img
-              src="../public/img/logo.png"
+              src="/img/logo.png"
               alt=""
               style={{ height: "74px" }}
             /></a>
