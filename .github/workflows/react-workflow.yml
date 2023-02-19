@@ -33,9 +33,10 @@ jobs:
       - name: Log dir
         run: |
           ls -la
+          pwd
       # Share artifact inside workflow
       - name: Share artifact inside workflow
         uses: actions/upload-artifact@v3
         with:
           name: react-dist
-          path: ./src
+          path: ../src
