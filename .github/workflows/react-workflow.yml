@@ -38,5 +38,5 @@ jobs:
       - name: Share artifact inside workflow
         uses: actions/upload-artifact@v3
         with:
-          name: react-dist
-          path: ../src
+          name: client-dist
+          path: ./client/dist
