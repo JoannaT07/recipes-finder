@@ -35,7 +35,7 @@ jobs:
           ls -la
       # Share artifact inside workflow
       - name: Share artifact inside workflow
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v2
         with:
           name: react-github-actions-build
           path: dist
