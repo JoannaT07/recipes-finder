@@ -15,7 +15,7 @@
 }
 
 .background-img {
-  background-image: url(../public/img/background.jpg);
+  background-image: url(./img/background.jpg);
   background-size: cover;
   background-attachment: static;
   height: 40vh;

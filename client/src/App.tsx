@@ -1,4 +1,4 @@
-import "./App.css";
+import "./assets/style.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import RecipesFinder from "./components/RecipesFinder";
 import { IngredientContextProvider } from "./context/ingredientContext";
