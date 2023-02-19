@@ -28,8 +28,7 @@ const Recipe = new Schema({
   ],
   instructions: [
     {
-      type: String,
-      required: true,
+      type: String
     },
   ],
   image: {

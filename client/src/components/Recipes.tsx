@@ -65,7 +65,7 @@ export const Recipes: FC<Props> = ({
         >
           <div className="recipe-img">
             <img
-              src={`../public/img/${
+              src={`/img/${
                 recipe.image ?? "default"
               }.jpg`}
               alt=""
