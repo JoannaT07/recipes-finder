@@ -35,4 +35,3 @@ jobs:
           script: |
             cd ./recipes/server
             npm install
-            npm run dev
