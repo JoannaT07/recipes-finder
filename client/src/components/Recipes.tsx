@@ -15,10 +15,7 @@ type Props = {
   selectedCategory?: string;
 };
 
-export const Recipes: FC<Props> = ({
-  chosenIngredients,
-  selectedCategory,
-}) => {
+export const Recipes: FC<Props> = ({ chosenIngredients, selectedCategory }) => {
   const [page, setPage] = useState(
     () => Number(JSON.parse(localStorage.getItem("page")!)) || 1
   );
@@ -53,7 +50,7 @@ export const Recipes: FC<Props> = ({
     navigateToRecipe(`/${e.currentTarget.id}`);
   };
 
-  return (
+  return recipes.length ? (
     <div className="recipe-list">
       {recipes.map((recipe, index) => (
         <div
@@ -64,17 +61,16 @@ export const Recipes: FC<Props> = ({
           onClick={handleRecipeClick}
         >
           <div className="recipe-img">
-            <img
-              src={`/img/${
-                recipe.image ?? "default"
-              }.jpg`}
-              alt=""
-            />
+            <img src={`/img/${recipe.image ?? "default"}.jpg`} alt="" />
           </div>
           <p>{recipe.name}</p>
         </div>
       ))}
       {isLoading && <div>...</div>}
     </div>
+  ) : (
+    <p className="search-empty">
+      Niestety, nie znaleziono przepisów spełniających Twoje kryteria wyszukiwania.
+    </p>
   );
 };

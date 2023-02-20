@@ -1,4 +1,4 @@
-import { FC, useContext, useEffect, useState } from "react";
+import { FC, useContext, useEffect, useRef, useState } from "react";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import { TiDelete } from "react-icons/ti";
 import { IngredientContext } from "../context/ingredientContext";
@@ -81,6 +81,7 @@ export const IngredientsSelector: FC<Props> = ({
           <HiMagnifyingGlass className="magnifying-icon" />
           <input
             type="text"
+            placeholder="Wpisz nazwę składnika"
             value={wantedIngredient}
             onClick={() => setIsOpen((prev) => !prev)}
             onChange={(e) => setWantedIngredient(e.target.value)}
@@ -92,7 +93,7 @@ export const IngredientsSelector: FC<Props> = ({
               {sortedIngredients
                 .filter(
                   ({ name }) =>
-                    name.toLowerCase().indexOf(wantedIngredient) !== -1
+                    name.toLowerCase().indexOf(wantedIngredient.toLocaleLowerCase()) !== -1
                 )
                 .map(({ name, id }) => (
                   <li onClick={() => handleAddIngredient(name, id)} key={id}>
@@ -107,6 +108,7 @@ export const IngredientsSelector: FC<Props> = ({
           options={options}
           onChange={handleCategoryChange}
           value={options.find((val) => val.value === selectedCategory)}
+          isSearchable={false}
           theme={(theme) => ({
             ...theme,
             borderRadius: 0,

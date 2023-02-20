@@ -225,6 +225,13 @@
   font-weight: bold;
 }
 
+.search-empty {
+  text-align: center;
+  font-size: 24px;
+  padding-block: 20px;
+  font-family: "Courgette", cursive;
+}
+
 @media (max-width: 1400px) {
   .recipe-list {
     grid-template-columns: repeat(3, 1fr);
