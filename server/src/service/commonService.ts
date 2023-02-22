@@ -16,3 +16,14 @@ export const getTags = (category: string) => {
   const founded = categories.find((el) => el.category === category);
   return founded?.tags;
 };
+
+
+export const getQueryObject = (ingredient: string | undefined, category: string) => {
+  const ingredientMatch = ingredient?.split(",").map((ingredient: any) => ({
+    $elemMatch: { id: ingredient },
+  }));
+  return {
+    ...(ingredient && { ingredients: { $all: ingredientMatch } }),
+    ...(category !== "wszystkie" && { tags: { $in: getTags(category) } }),
+  }
+}

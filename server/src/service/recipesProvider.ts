@@ -1,7 +1,7 @@
 import * as fs from "fs";
-import RecipeModel from "../models/Recipes";
-import IngredientsModel from "../models/Ingredients";
 import { IngredientsConfig, BasicIngredient, RawRecipe } from "../models/types";
+import { deleteIngredients, findOneIngredient, insertIngredients } from "./ingredientsRepository";
+import { deleteRecipes, findOneRecipe, insertRecipes } from "./recipesRepository";
 // import logger from "../../winstonconfig";
 const short = require("short-uuid");
 
@@ -71,14 +71,14 @@ const parseIngredients = (ingredientsConfig: IngredientsConfig) => {
 };
 
 export const isDatabaseEmpty = async () => {
-  const ingredientDb = await IngredientsModel.findOne({});
-  const recipeDb = await RecipeModel.findOne({});
+  const ingredientDb = await findOneIngredient();
+  const recipeDb = await findOneRecipe();
   return !ingredientDb || !recipeDb;
 };
 
 export const processRawRecipes = async () => {
-  // await IngredientsModel.deleteMany({});
-  // await RecipeModel.deleteMany({})
+  // await deleteIngredients();
+  // await deleteRecipes();
 
   if (await isDatabaseEmpty()) {
     const rawData = loadData();
@@ -86,8 +86,8 @@ export const processRawRecipes = async () => {
     if (rawData) {
       const recipes = parseRecipe(rawData, ingredientsConfig);
       const ingredients = parseIngredients(ingredientsConfig);
-      await RecipeModel.insertMany(recipes);
-      await IngredientsModel.insertMany(ingredients);
+      await insertRecipes(recipes);
+      await insertIngredients(ingredients);
     }
   }
 };

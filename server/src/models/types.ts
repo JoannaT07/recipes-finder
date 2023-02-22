@@ -21,3 +21,21 @@ export type RawIngredient = {
   name: string;
   quantity: string;
 };
+
+export type Ingredient = {
+  id: string;
+  name: string;
+}
+
+export type Recipe = {
+  id: string;
+  name: string | null;
+  ingredients: {
+      id: string | undefined;
+      name: string;
+      quantity: string;
+  }[];
+  instructions: string[] | null;
+  image: string | undefined;
+  tags: string | null;
+}

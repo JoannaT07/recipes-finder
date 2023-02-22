@@ -4,7 +4,7 @@ import cors from "cors";
 import { connectDB } from "./database";
 import ingredientsRouter from "./routes/ingredients"
 import recipesRouter from "./routes/recipes"
-import { processRawRecipes } from "./routes/recipesService";
+import { processRawRecipes } from "./service/";
 dotenv.config();
 
 const port = 8081;
@@ -20,7 +20,6 @@ app.use(cors());
 app.use("/api/ingredients", ingredientsRouter);
 app.use("/api/recipes", recipesRouter);
 app.use(express.static('./static'));
-console.log()
 
 main();
 processRawRecipes();
