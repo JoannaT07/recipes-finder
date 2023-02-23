@@ -11,11 +11,21 @@ export const getIngredients = async () => {
   }
 };
 
-const getQueryString = (input: any) => {
+export const getQueryString = (  page: number,
+  ingredients?: Ingredients,
+  category?: string) => {
+
+    const queryObject = {
+      page,
+      ...(ingredients?.length && {
+        ingredients: ingredients.map((ing) => ing.id).join(","),
+      }),
+      ...(category && { category }),
+    }
   return (
     "?" +
-    Object.keys(input)
-      .map((key) => `${key}=${input[key]}`)
+    Object.keys(queryObject)
+      .map((key) => `${key}=${(queryObject as any)[key]}`)
       .join("&")
   );
 };
@@ -25,13 +35,7 @@ export const getRecipes = async (
   ingredients?: Ingredients,
   category?: string
 ): Promise<Recipes | undefined> => {
-  const query = getQueryString({
-    page,
-    ...(ingredients?.length && {
-      ingredients: ingredients.map((ing) => ing.id).join(","),
-    }),
-    ...(category && { category }),
-  });
+  const query = getQueryString(page, ingredients, category);
   try {
     return (await axios.get(`${API_URL}/recipes${query}`)).data;
   } catch (e) {

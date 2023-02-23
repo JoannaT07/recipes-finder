@@ -4,6 +4,7 @@ import { TiDelete } from "react-icons/ti";
 import { IngredientContext } from "../context/ingredientContext";
 import { Ingredients } from "../model/types";
 import Select from "react-select";
+import { sortIngredients } from "../service/ingredientsSorter";
 
 export const options: SelectedCategory[] = [
   { value: "wszystkie", label: "Wszystkie" },
@@ -34,9 +35,7 @@ export const IngredientsSelector: FC<Props> = ({
   setSelectedCategory,
 }) => {
   const ingredients = useContext(IngredientContext);
-  const sortedIngredients = ingredients.sort((a, b) =>
-    a.name > b.name ? 1 : -1
-  );
+  const sortedIngredients = sortIngredients(ingredients);
   const [isOpen, setIsOpen] = useState(false);
   const [wantedIngredient, setWantedIngredient] = useState("");
 
