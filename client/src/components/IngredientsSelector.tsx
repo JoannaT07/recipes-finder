@@ -67,7 +67,7 @@ export const IngredientsSelector: FC<Props> = ({
   };
 
   const handleCategoryChange = (selectedCategory: SelectedCategory) => {
-    if(!selectedCategory) return;
+    if (!selectedCategory) return;
     window.scrollTo(0, 0);
     setSelectedCategory(selectedCategory.value);
     localStorage.setItem("category", JSON.stringify(selectedCategory.value));
@@ -80,7 +80,7 @@ export const IngredientsSelector: FC<Props> = ({
           <HiMagnifyingGlass className="magnifying-icon" />
           <input
             type="text"
-            placeholder="Wpisz nazwę składnika"
+            placeholder="Wpisz nazwę składnika, aby wyszukać przepis"
             value={wantedIngredient}
             onClick={() => setIsOpen((prev) => !prev)}
             onChange={(e) => setWantedIngredient(e.target.value)}
@@ -92,7 +92,9 @@ export const IngredientsSelector: FC<Props> = ({
               {sortedIngredients
                 .filter(
                   ({ name }) =>
-                    name.toLowerCase().indexOf(wantedIngredient.toLocaleLowerCase()) !== -1
+                    name
+                      .toLowerCase()
+                      .indexOf(wantedIngredient.toLocaleLowerCase()) !== -1
                 )
                 .map(({ name, id }) => (
                   <li onClick={() => handleAddIngredient(name, id)} key={id}>
