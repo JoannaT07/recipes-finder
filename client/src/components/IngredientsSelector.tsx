@@ -66,7 +66,7 @@ export const IngredientsSelector: FC<Props> = ({
     );
   };
 
-  const handleCategoryChange = (selectedCategory: SelectedCategory) => {
+  const handleCategoryChange = (selectedCategory: SelectedCategory | null) => {
     if (!selectedCategory) return;
     window.scrollTo(0, 0);
     setSelectedCategory(selectedCategory.value);
