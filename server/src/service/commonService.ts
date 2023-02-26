@@ -18,12 +18,12 @@ export const getTags = (category: string) => {
 };
 
 
-export const getQueryObject = (ingredient: string | undefined, category: string) => {
+export const getQueryObject = (ingredient: string | undefined, category: string | undefined) => {
   const ingredientMatch = ingredient?.split(",").map((ingredient: any) => ({
     $elemMatch: { id: ingredient },
   }));
   return {
     ...(ingredient && { ingredients: { $all: ingredientMatch } }),
-    ...(category !== "wszystkie" && { tags: { $in: getTags(category) } }),
+    ...(category && category !== "wszystkie" && { tags: { $in: getTags(category) } }),
   }
 }

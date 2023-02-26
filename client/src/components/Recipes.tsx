@@ -68,9 +68,12 @@ export const Recipes: FC<Props> = ({ chosenIngredients, selectedCategory }) => {
       ))}
       {isLoading && <div>...</div>}
     </div>
+  ) : isLoading ? (
+    <div>...</div>
   ) : (
     <p className="search-empty">
-      Niestety, nie znaleziono przepisów spełniających Twoje kryteria wyszukiwania.
+      Niestety, nie znaleziono przepisów spełniających Twoje kryteria
+      wyszukiwania.
     </p>
   );
 };

@@ -8,7 +8,7 @@ export const findOneRecipe = async (query?: object) => {
 
 export const findRecipes = async (
   ingredient: string | undefined,
-  category: string,
+  category: string | undefined,
   page: number
 ) => {
   return await RecipeModel.aggregate([

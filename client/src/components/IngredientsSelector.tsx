@@ -1,4 +1,4 @@
-import { FC, useContext, useEffect, useRef, useState } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import { TiDelete } from "react-icons/ti";
 import { IngredientContext } from "../context/ingredientContext";
@@ -66,7 +66,7 @@ export const IngredientsSelector: FC<Props> = ({
     );
   };
 
-  const handleCategoryChange = (selectedCategory: SelectedCategory | null) => {
+  const handleCategoryChange = (selectedCategory: SelectedCategory) => {
     if(!selectedCategory) return;
     window.scrollTo(0, 0);
     setSelectedCategory(selectedCategory.value);

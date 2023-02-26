@@ -7,7 +7,7 @@ import { Ingredients } from "../model/types";
 const RecipesFinder: FC = () => {
   const [chosenIngredients, setChosenIngredients] = useState<Ingredients>(() => JSON.parse(localStorage.getItem("ingredients")!) || []);
   const [selectedCategory, setSelectedCategory] = useState<any>(() => JSON.parse(localStorage.getItem("category")!) || options[0].value);
-
+  
   return (
     <div className="main-container">
       <div className="top-section">

@@ -4,7 +4,7 @@ import cors from "cors";
 import { connectDB } from "./database";
 import ingredientsRouter from "./routes/ingredients"
 import recipesRouter from "./routes/recipes"
-import { processRawRecipes } from "./service/";
+import { processRawRecipes } from "./service/recipesProvider";
 dotenv.config();
 
 const port = 8081;
